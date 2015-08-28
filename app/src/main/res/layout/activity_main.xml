@@ -3,5 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <Button
+        android:id="@+id/main_start_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="start"
+        />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/main_start_btn"
+        >
+        <TextView
+            android:id="@+id/main_log_tv"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
 </RelativeLayout>
