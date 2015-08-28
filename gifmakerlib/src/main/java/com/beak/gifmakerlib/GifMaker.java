@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 
@@ -20,6 +21,17 @@ import java.util.List;
  */
 public class GifMaker {
 
+    private int mRate = 1;
+
+    private OnGifListener mGifListener = null;
+
+    public GifMaker (int rate) {
+        if (rate < 1) {
+            return;
+        }
+        mRate = rate;
+    }
+
     public boolean makeGif (List<Bitmap> source, String outputPath) throws IOException {
         AnimatedGifEncoder encoder = new AnimatedGifEncoder();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -31,17 +43,17 @@ public class GifMaker {
             if (bmp == null) {
                 continue;
             }
-            //Bitmap thumb = ThumbnailUtils.extractThumbnail(bmp, bmp.getWidth() / 8, bmp.getHeight() / 8);
+            Bitmap thumb = ThumbnailUtils.extractThumbnail(bmp, bmp.getWidth() / mRate, bmp.getHeight() / mRate, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
             try {
-                encoder.addFrame(bmp);
+                encoder.addFrame(thumb);
+                if (mGifListener != null) {
+                    mGifListener.onMake(i, length);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 System.gc();
                 break;
             }
-
-            bmp.recycle();
-            //thumb.recycle();
             //TODO how about releasing bitmap after addFrame
         }
         encoder.finish();
@@ -97,8 +109,8 @@ public class GifMaker {
     }
 
     private boolean makeGifWithMediaMetadataRetriever (MediaMetadataRetriever retriever, long startMillSeconds, long endMillSeconds, long periodMillSeconds, String outputPath) {
-        if (startMillSeconds <= 0 || endMillSeconds <= 0 || periodMillSeconds <= 0 || endMillSeconds <= startMillSeconds) {
-            throw new IllegalArgumentException("startMillSecodes, endMillSeconds or periodMillSeconds may <= 0, or endMillSeconds <= startMillSeconds");
+        if (startMillSeconds < 0 || endMillSeconds <= 0 || periodMillSeconds <= 0 || endMillSeconds <= startMillSeconds) {
+            throw new IllegalArgumentException("startMillSecodes may < 0 or endMillSeconds or periodMillSeconds may <= 0, or endMillSeconds <= startMillSeconds");
         }
         try {
             List<Bitmap> bitmaps = new ArrayList<Bitmap>();
@@ -117,26 +129,11 @@ public class GifMaker {
         }
     }
 
-    public class VideoOption {
-        public long startMillSeconds;
-        public long endMillSeconds;
-        long periodMillSeconds;
-        public String path;
-
-
-        public boolean canMakeGif () {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(path);
-
-            int width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-            int height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-            long frameByteLength = width * height * 4;
-            int frameCount = (int)((endMillSeconds - startMillSeconds) / periodMillSeconds);
-            long totalByteLength = frameByteLength * frameCount;
-
-            long memoryAvailable = Runtime.getRuntime().maxMemory();
-            return memoryAvailable > totalByteLength;
-        }
+    public void setOnGifListener (OnGifListener listener) {
+        mGifListener = listener;
     }
 
+    public interface OnGifListener {
+        public void onMake (int current, int total);
+    }
 }
