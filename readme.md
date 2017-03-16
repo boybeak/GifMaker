@@ -8,5 +8,7 @@ the result is like this below:
 
 The project runs like this below:
 
-![https://github.com/boybeak/GifMaker/blob/master/demo_pic.png](https://github.com/boybeak/GifMaker/blob/master/demo_pic.png =540x960)
+<img src="https://github.com/boybeak/GifMaker/blob/master/demo_pic.png" alt="Drawing" style="width: 540px; height: 960px"/>
+
+
 
