@@ -21,15 +21,15 @@ import java.util.List;
  */
 public class GifMaker {
 
-    private int mRate = 1;
+    private int mScale = 1;
 
     private OnGifListener mGifListener = null;
 
-    public GifMaker (int rate) {
-        if (rate < 1) {
+    public GifMaker (int scale) {
+        if (scale < 1) {
             return;
         }
-        mRate = rate;
+        mScale = scale;
     }
 
     public boolean makeGif (List<Bitmap> source, String outputPath) throws IOException {
@@ -43,7 +43,7 @@ public class GifMaker {
             if (bmp == null) {
                 continue;
             }
-            Bitmap thumb = ThumbnailUtils.extractThumbnail(bmp, bmp.getWidth() / mRate, bmp.getHeight() / mRate, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+            Bitmap thumb = ThumbnailUtils.extractThumbnail(bmp, bmp.getWidth() / mScale, bmp.getHeight() / mScale, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
             try {
                 encoder.addFrame(thumb);
                 if (mGifListener != null) {
