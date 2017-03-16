@@ -10,5 +10,5 @@ The project runs like this below:
 
 ![](https://github.com/boybeak/GifMaker/blob/master/demo_pic.png | width=400)
 
-- `<img src="https://github.com/boybeak/GifMaker/blob/master/demo_pic.png" data-canonical-src="https://github.com/boybeak/GifMaker/blob/master/demo_pic.png" width="540" height="960" />`
+<img src="https://github.com/boybeak/GifMaker/blob/master/demo_pic.png" data-canonical-src="https://github.com/boybeak/GifMaker/blob/master/demo_pic.png" width="540" height="960" />`
 
