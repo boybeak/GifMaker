@@ -15,7 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 
@@ -25,11 +28,18 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mMainBtn;
     private TextView mLogTv;
+    private ImageView mShowCaseIv;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             mLogTv.append(intent.getStringExtra("log") + "\n");
+            boolean success = intent.getBooleanExtra(GifMakeService.EXTRA_SUCCESS, false);
+            if (success) {
+                mLogTv.append("trying to show this gif");
+                String file = intent.getStringExtra(GifMakeService.EXTRA_FILE);
+                Glide.with(MainActivity.this).load(file).asGif().placeholder(android.R.color.holo_green_dark).into(mShowCaseIv);
+            }
         }
     };
 
@@ -40,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         mMainBtn = (Button)findViewById(R.id.main_start_btn);
         mLogTv = (TextView)findViewById(R.id.main_log_tv);
+        mShowCaseIv = (ImageView)findViewById(R.id.show_case);
 
         mMainBtn.setOnClickListener(new View.OnClickListener() {
             @Override

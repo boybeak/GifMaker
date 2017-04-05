@@ -9,12 +9,6 @@ import android.util.Log;
 
 import com.beak.gifmakerlib.GifMaker;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
- * helper methods.
- */
 public class GifMakeService extends IntentService {
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     public static final String ACTION_MAKE_GIF = "com.beak.gifmaker.action.MAKE_GIF";
@@ -24,6 +18,8 @@ public class GifMakeService extends IntentService {
     private static final String EXTRA_FROM_POSITION = "com.beak.gifmaker.extra.FROM_POSITION";
     private static final String EXTRA_TO_POSITION = "com.beak.gifmaker.extra.TO_POSITION";
     private static final String EXTRA_PERIOD = "com.beak.gifmaker.extra.PERIOD";
+
+    public static final String EXTRA_FILE = "file", EXTRA_SUCCESS = "success";
 
     public GifMakeService() {
         super("GifMakeService");
@@ -79,6 +75,8 @@ public class GifMakeService extends IntentService {
         long now = System.currentTimeMillis();
         LocalBroadcastManager.getInstance(GifMakeService.this).sendBroadcast(new Intent(ACTION_MAKE_GIF)
                 .putExtra("log", "Done! " + (success ? " success " : " failed ") + " cost time=" + ((now - startAt)/1000) + " seconds "
-                + " \nsave at=" + toFile));
+                + " \nsave at=" + toFile)
+                .putExtra(EXTRA_FILE, toFile)
+                .putExtra(EXTRA_SUCCESS, true));
     }
 }
