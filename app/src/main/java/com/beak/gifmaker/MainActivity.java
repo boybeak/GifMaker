@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             if (success) {
                 mLogTv.append("trying to show this gif");
                 String file = intent.getStringExtra(GifMakeService.EXTRA_FILE);
-                Glide.with(MainActivity.this).load(file).asGif().placeholder(android.R.color.holo_green_dark).into(mShowCaseIv);
+                Glide.with(MainActivity.this).load(new File(file)).asGif().placeholder(android.R.color.holo_green_dark).into(mShowCaseIv);
             }
         }
     };
